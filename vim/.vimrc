@@ -52,7 +52,7 @@ Plug 'mbbill/undotree'
 call plug#end()
 
 set background=dark
-
+colo gruvbox
 if executable('rg')
     let g:rg_derive_root='true'
 endif
