@@ -126,24 +126,24 @@
 
     let books = {}
     let books.name = 'books'
-    let books.path = '~/Documents/notes/books/'
-    let books.path_html = '~/Documents/notes_html/books/'
+    let books.path = '~/notes/books/'
+    let books.path_html = '~/notes_html/books/'
     let books.syntax = 'markdown'
     let books.ext = '.md'
     let books.custom_wiki2html = 'vimwiki_markdown'
 
     let thesis = {}
     let thesis.name = 'thesis'
-    let thesis.path = '~/Documents/notes/thesis/'
-    let thesis.path_html = '~/Documents/notes_html/thesis/'
+    let thesis.path = '~/notes/thesis/'
+    let thesis.path_html = '~/notes_html/thesis/'
     let thesis.syntax = 'markdown'
     let thesis.ext = '.md'
     let thesis.custom_wiki2html = 'vimwiki_markdown'
     
     let misc = {}
     let misc.name = 'misc'
-    let misc.path = '~/Documents/notes/misc/'
-    let misc.path_html = '~/Documents/notes_html/misc/'
+    let misc.path = '~/notes/misc/'
+    let misc.path_html = '~/notes_html/misc/'
     let misc.syntax = 'markdown'
     let misc.ext = '.md'
     let misc.custom_wiki2html = 'vimwiki_markdown'
