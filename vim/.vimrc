@@ -51,8 +51,8 @@
     syntax on
     filetype plugin on
     set termguicolors
-    colorscheme yellow-moon
-    set background=dark
+    set relativenumber
+    set number
     set guicursor=
     set nohlsearch
     set noerrorbells
@@ -62,7 +62,6 @@
     set autoindent
     filetype plugin indent on
     set expandtab
-    set relativenumber
     set nowrap
     set noswapfile
     set nobackup
@@ -70,8 +69,11 @@
     set undofile
     set incsearch
     set ttimeoutlen=100
+    set timeoutlen=1000
     set splitbelow splitright
-            
+    colorscheme yellow-moon
+    hi Normal guibg=NONE ctermbg=NONE
+    highlight LineNr guibg=NONE
 
 " _____           _                 
 "/  ___|         | |                
@@ -111,6 +113,8 @@
 "| |/\| | | |/ / / __|
 "\  /\  / |   <| \__ \
 " \/  \/|_|_|\_\_|___/
+    
+    autocmd FileType markdown,rmd set wrap
 
     let master = {}
     let master.name = 'master'
@@ -290,12 +294,15 @@
 
 """ Markdown / Vimwiki
 	autocmd Filetype markdown,rmd map <leader>w yiWi[<esc>Ea](<esc>pa)
-    autocmd Filetype markdown,rmd nmap <leader>rl ds[f(df)
-    autocmd Filetype markdown,rmd nmap <silent> <leader>Rn a<++><Esc>/<++><CR>"_c4l<Esc>gti[
-    autocmd Filetype markdown,rmd nnoremap <leader>r_ a<++><Esc>vi[:s/\%V_/ /g<CR>/<++><CR>"_c4l<Esc>
-    autocmd Filetype markdown,rmd nmap <leader>R_ a<++><Esc>vi[:s/\%V_/ /g<CR>/<++><CR>"_c4l<Esc>gti[
-    " Stupid Link Shit
-    " syntax: ,<L/link case><wiki:w,relative:r(optional)><underscores:_,none:n>
+        autocmd Filetype markdown,rmd nmap <leader>rl ds[f(df)
+        autocmd Filetype markdown,rmd nmap <silent> <leader>Rn a<++><Esc>/<++><CR>"_c4l<Esc>gti[
+        autocmd Filetype markdown,rmd nnoremap <leader>r_ a<++><Esc>vi[:s/\%V_/ /g<CR>/<++><CR>"_c4l<Esc>
+        autocmd Filetype markdown,rmd nmap <leader>R_ a<++><Esc>vi[:s/\%V_/ /g<CR>/<++><CR>"_c4l<Esc>gti[
+        
+        autocmd Filetype markdown,rmd nmap <leader>cd :VimwikiAll2HTML!<CR> 
+        autocmd Filetype markdown,rmd nmap <silent> <leader>cf :silent !python3 ~/.vim/scripts/fixwiki.py<CR>:redraw!<CR>
+        " Stupid Link Shit
+        " syntax: ,<L/link case><wiki:w,relative:r(optional)><underscores:_,none:n>
 	autocmd Filetype markdown,rmd imap ,Ln <Esc>byiwysiw]f]pysiw)f)a<++><Esc>F[gti[
 	autocmd Filetype markdown,rmd nmap ,Ln yiwysiw]f]pysiw)f)a<++><Esc>F[gti[
 	autocmd Filetype markdown,rmd imap ,L_ <Esc>byiwysiw]f]pysiw)f)a<++><Esc>F[<leader>R_
