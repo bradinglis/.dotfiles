@@ -124,8 +124,8 @@
 
     let master = {}
     let master.name = 'master'
-    let master.path = '~/Documents/notes/'
-    let master.path_html = '~/Documents/notes_html/'
+    let master.path = '~/notes/'
+    let master.path_html = '~/notes_html/'
     let master.syntax = 'markdown'
     let master.ext = '.md'
     let master.custom_wiki2html = 'vimwiki_markdown'
