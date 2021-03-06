@@ -18,9 +18,14 @@
 "\_|   |_|\__,_|\__, |_|_| |_|___/
 "                __/ |            
 "               |___/           
+"
     call plug#begin('~/.vim/plugged')
+    Plug 'ledger/vim-ledger'
+    Plug 'terryma/vim-multiple-cursors'
+    Plug 'jiangmiao/auto-pairs'
     Plug 'ackyshake/VimCompletesMe'
     Plug 'sts10/vim-pink-moon'  
+    Plug 'morhetz/gruvbox'  
     Plug 'dense-analysis/ale'
     Plug 'junegunn/goyo.vim'
     Plug 'junegunn/limelight.vim'
@@ -32,12 +37,18 @@
     Plug 'xuhdev/vim-latex-live-preview', { 'for': 'tex' }
     Plug 'vimwiki/vimwiki'
     Plug 'christoomey/vim-titlecase'
+    Plug 'ap/vim-css-color'
+    Plug 'glts/vim-radical'
+    Plug 'glts/vim-magnum'
     call plug#end()
 
     let g:ctrlp_user_command = ['.git/', 'git --git-dir=%s/.git ls-files -os --exclude standard']
     let g:netrw_browse_split = 2
     let g:netrw_banner = 0
     let b:vcm_tab_complete = 'omni'
+    let g:vimwiki_hl_headers = 1
+    let g:livepreview_previewer = 'open -a Preview '
+
 "______           _          
 "| ___ \         (_)         
 "| |_/ / __ _ ___ _  ___ ___ 
@@ -50,7 +61,7 @@
     let mapleader = " "
     syntax on
     filetype plugin on
-    set termguicolors
+    " set termguicolors
     set relativenumber
     set number
     set guicursor=
@@ -71,7 +82,8 @@
     set ttimeoutlen=100
     set timeoutlen=1000
     set splitbelow splitright
-    colorscheme yellow-moon
+    colorscheme gruvbox
+    set background=dark
     hi Normal guibg=NONE ctermbg=NONE
     highlight LineNr guibg=NONE
 
@@ -99,12 +111,6 @@
             autocmd VimEnter * PlugInstall --sync | source $MYVIMRC
         endif
     endif
-
-    if g:os == "Linux"
-        au VimEnter * !xmodmap -e 'clear Lock' -e 'keycode 0x42 = Escape'
-        au VimLeave * !xmodmap -e 'clear Lock' -e 'keycode 0x42 = Caps_Lock'
-    endif
-    
 
 
 " _    _ _ _    _     
@@ -174,9 +180,10 @@
     let g:limelight_conceal_ctermfg = 'DarkGray'  
     autocmd! User GoyoEnter Limelight
     autocmd! User GoyoLeave Limelight!
+    autocmd  User GoyoLeave hi Normal guibg=NONE ctermbg=NONE
     map <leader>f :Goyo \| set linebreak<CR>
 
-	map <leader>o :setlocal spell! spelllang=en_us<CR>
+	map <leader>o :setlocal spell! spelllang=en_au<CR>
 
     inoremap <Space><Tab> <Esc>/<++><Enter>"_c4l
 	vnoremap <Space><Tab> <Esc>/<++><Enter>"_c4l
@@ -193,6 +200,7 @@
 
 """LATEX
 	" Word count:
+        autocmd Filetype tex setl updatetime=1
 	autocmd FileType tex map <F3> :w !detex \| wc -w<CR>
 	autocmd FileType tex inoremap <F3> <Esc>:w !detex \| wc -w<CR>
 
@@ -212,10 +220,12 @@
 	autocmd FileType tex inoremap ,ul \begin{itemize}<Enter><Enter>\end{itemize}<Enter><Enter><++><Esc>3kA\item<Space>
 	autocmd FileType tex inoremap ,li <Enter>\item<Space>
 	autocmd FileType tex inoremap ,ref \ref{}<Space><++><Esc>T{i
+	autocmd FileType tex inoremap ,fn \footnote{}<Space><++><Esc>T{i
+	autocmd FileType tex inoremap ,su \textsuperscript{}<Space><++><Esc>T{i
 	autocmd FileType tex inoremap ,tab \begin{tabular}<Enter><++><Enter>\end{tabular}<Enter><Enter><++><Esc>4kA{}<Esc>i
 	autocmd FileType tex inoremap ,ot \begin{tableau}<Enter>\inp{<++>}<Tab>\const{<++>}<Tab><++><Enter><++><Enter>\end{tableau}<Enter><Enter><++><Esc>5kA{}<Esc>i
 	autocmd FileType tex inoremap ,can \cand{}<Tab><++><Esc>T{i
-	autocmd FileType tex inoremap con \const{}<Tab><++><Esc>T{i
+	autocmd FileType tex inoremap ,con \const{}<Tab><++><Esc>T{i
 	autocmd FileType tex inoremap ,v \vio{}<Tab><++><Esc>T{i
 	autocmd FileType tex inoremap ,a \href{}{<++>}<Space><++><Esc>2T{i
 	autocmd FileType tex inoremap ,sc \textsc{}<Space><++><Esc>T{i
@@ -226,7 +236,7 @@
 	autocmd FileType tex inoremap ,st <Esc>F{i*<Esc>f}i
 	autocmd FileType tex inoremap ,beg \begin{DELRN}<Enter><++><Enter>\end{DELRN}<Enter><Enter><++><Esc>4k0fR:MultipleCursorsFind<Space>DELRN<Enter>c
 	autocmd FileType tex inoremap ,up <Esc>/usepackage<Enter>o\usepackage{}<Esc>i
-	autocmd FileType tex nnoremap ,up /usepackage<Enter>o\usepackage{}<Esc>i
+	" autocmd FileType tex nnoremap ,up /usepackage<Enter>o\usepackage{}<Esc>i
 	autocmd FileType tex inoremap ,tt \texttt{}<Space><++><Esc>T{i
 	autocmd FileType tex inoremap ,bt {\blindtext}
 	autocmd FileType tex inoremap ,nu $\varnothing$
@@ -298,43 +308,48 @@
         autocmd Filetype markdown,rmd nmap <silent> <leader>Rn a<++><Esc>/<++><CR>"_c4l<Esc>gti[
         autocmd Filetype markdown,rmd nnoremap <leader>r_ a<++><Esc>vi[:s/\%V_/ /g<CR>/<++><CR>"_c4l<Esc>
         autocmd Filetype markdown,rmd nmap <leader>R_ a<++><Esc>vi[:s/\%V_/ /g<CR>/<++><CR>"_c4l<Esc>gti[
-        
+        autocmd Filetype markdown,rmd nmap <leader>cl] $vT]l+f(lgui(vi(:s/\%V /_/g<CR>f[
+        autocmd Filetype markdown,rmd nmap <leader>cl. $vT.l+f(lgui(vi(:s/\%V /_/g<CR>f[
+            
         autocmd Filetype markdown,rmd nmap <leader>cd :VimwikiAll2HTML!<CR> 
         autocmd Filetype markdown,rmd nmap <silent> <leader>cf :silent !python3 ~/.vim/scripts/fixwiki.py<CR>:redraw!<CR>
         " Stupid Link Shit
         " syntax: ,<L/link case><wiki:w,relative:r(optional)><underscores:_,none:n>
 	autocmd Filetype markdown,rmd imap ,Ln <Esc>byiwysiw]f]pysiw)f)a<++><Esc>F[gti[
-	autocmd Filetype markdown,rmd nmap ,Ln yiwysiw]f]pysiw)f)a<++><Esc>F[gti[
+	" autocmd Filetype markdown,rmd nmap ,Ln yiwysiw]f]pysiw)f)a<++><Esc>F[gti[
 	autocmd Filetype markdown,rmd imap ,L_ <Esc>byiwysiw]f]pysiw)f)a<++><Esc>F[<leader>R_
-	autocmd Filetype markdown,rmd nmap ,L_ <yiwysiw]f]pysiw)f)a<++><Esc>F[<leader>R_
+	" autocmd Filetype markdown,rmd nmap ,L_ <yiwysiw]f]pysiw)f)a<++><Esc>F[<leader>R_
 	autocmd Filetype markdown,rmd imap ,ln <Esc>byiwysiw]f]pysiw)f)a<++><Esc>F[
-	autocmd Filetype markdown,rmd nmap ,ln yiwysiw]f]pysiw)f)a<++><Esc>F[
+	" autocmd Filetype markdown,rmd nmap ,ln yiwysiw]f]pysiw)f)a<++><Esc>F[
 	autocmd Filetype markdown,rmd imap ,l_ <Esc>byiwysiw]f]pysiw)f)a<++><Esc>F[<leader>r_
-	autocmd Filetype markdown,rmd nmap ,l_ <yiwysiw]f]pysiw)f)a<++><Esc>F[<leader>r_
+	" autocmd Filetype markdown,rmd nmap ,l_ <yiwysiw]f]pysiw)f)a<++><Esc>F[<leader>r_
 	autocmd Filetype markdown,rmd imap ,Lwn <Esc>byiwysiw]f]pysiw)awn.<++>:<Esc>f)a<++><Esc>F[gti[
-	autocmd Filetype markdown,rmd nmap ,Lwn yiwysiw]f]pysiw)awn.<++>:<Esc>f)a<++><Esc>F[gti[
+	" autocmd Filetype markdown,rmd nmap ,Lwn yiwysiw]f]pysiw)awn.<++>:<Esc>f)a<++><Esc>F[gti[
 	autocmd Filetype markdown,rmd imap ,Lw_ <Esc>byiwysiw]f]pysiw)awn.<++>:<Esc>f)a<++><Esc>F[<leader>R_
-	autocmd Filetype markdown,rmd nmap ,Lw_ <yiwysiw]f]pysiw)awn.<++>:<Esc>f)a<++><Esc>F[<leader>R_
+	" autocmd Filetype markdown,rmd nmap ,Lw_ <yiwysiw]f]pysiw)awn.<++>:<Esc>f)a<++><Esc>F[<leader>R_
 	autocmd Filetype markdown,rmd imap ,lwn <Esc>byiwysiw]f]pysiw)awn.<++>:<Esc>f)a<++><Esc>F[
-	autocmd Filetype markdown,rmd nmap ,lwn yiwysiw]f]pysiw)awn.<++>:<Esc>f)a<++><Esc>F[
+	" autocmd Filetype markdown,rmd nmap ,lwn yiwysiw]f]pysiw)awn.<++>:<Esc>f)a<++><Esc>F[
 	autocmd Filetype markdown,rmd imap ,lw_ <Esc>byiwysiw]f]pysiw)awn.<++>:<Esc>f)a<++><Esc>F[<leader>r_
-	autocmd Filetype markdown,rmd nmap ,lw_ <yiwysiw]f]pysiw)awn.<++>:<Esc>f)a<++><Esc>F[<leader>r_
+	" autocmd Filetype markdown,rmd nmap ,lw_ <yiwysiw]f]pysiw)awn.<++>:<Esc>f)a<++><Esc>F[<leader>r_
 	autocmd Filetype markdown,rmd imap ,Lrn <Esc>byiwysiw]f]pysiw)a<++>/<Esc>f)a<++><Esc>F[gti[
-	autocmd Filetype markdown,rmd nmap ,Lrn yiwysiw]f]pysiw)a<++>/<Esc>f)a<++><Esc>F[gti[
+	" autocmd Filetype markdown,rmd nmap ,Lrn yiwysiw]f]pysiw)a<++>/<Esc>f)a<++><Esc>F[gti[
 	autocmd Filetype markdown,rmd imap ,Lr_ <Esc>byiwysiw]f]pysiw)a<++>/<Esc>f)a<++><Esc>F[<leader>R_
-	autocmd Filetype markdown,rmd nmap ,Lr_ <yiwysiw]f]pysiw)a<++>/<Esc>f)a<++><Esc>F[<leader>R_
+	" autocmd Filetype markdown,rmd nmap ,Lr_ <yiwysiw]f]pysiw)a<++>/<Esc>f)a<++><Esc>F[<leader>R_
 	autocmd Filetype markdown,rmd imap ,lrn <Esc>byiwysiw]f]pysiw)a<++>/<Esc>f)a<++><Esc>F[
-	autocmd Filetype markdown,rmd nmap ,lrn yiwysiw]f]pysiw)a<++>/<Esc>f)a<++><Esc>F[
+	" autocmd Filetype markdown,rmd nmap ,lrn yiwysiw]f]pysiw)a<++>/<Esc>f)a<++><Esc>F[
 	autocmd Filetype markdown,rmd imap ,lr_ <Esc>byiwysiw]f]pysiw)a<++>/<Esc>f)a<++><Esc>F[<leader>r_
-	autocmd Filetype markdown,rmd nmap ,lr_ <yiwysiw]f]pysiw)a<++>/<Esc>f)a<++><Esc>F[<leader>r_
+	" autocmd Filetype markdown,rmd nmap ,lr_ <yiwysiw]f]pysiw)a<++>/<Esc>f)a<++><Esc>F[<leader>r_
 	autocmd Filetype markdown,rmd imap ,Lwrn <Esc>byiwysiw]f]pysiw)awn.<++>:<++>/<Esc>f)a<++><Esc>F[gti[
-	autocmd Filetype markdown,rmd nmap ,Lwrn yiwysiw]f]pysiw)awn.<++>:<++>/<Esc>f)a<++><Esc>F[gti[
+	" autocmd Filetype markdown,rmd nmap ,Lwrn yiwysiw]f]pysiw)awn.<++>:<++>/<Esc>f)a<++><Esc>F[gti[
 	autocmd Filetype markdown,rmd imap ,Lwr_ <Esc>byiwysiw]f]pysiw)awn.<++>:<++>/<Esc>f)a<++><Esc>F[<leader>R_
-	autocmd Filetype markdown,rmd nmap ,Lwr_ <yiwysiw]f]pysiw)awn.<++>:<++>/<Esc>f)a<++><Esc>F[<leader>R_
+	" autocmd Filetype markdown,rmd nmap ,Lwr_ <yiwysiw]f]pysiw)awn.<++>:<++>/<Esc>f)a<++><Esc>F[<leader>R_
 	autocmd Filetype markdown,rmd imap ,lwrn <Esc>byiwysiw]f]pysiw)awn.<++>:<++>/<Esc>f)a<++><Esc>F[
-	autocmd Filetype markdown,rmd nmap ,lwrn yiwysiw]f]pysiw)awn.<++>:<++>/<Esc>f)a<++><Esc>F[
+	" autocmd Filetype markdown,rmd nmap ,lwrn yiwysiw]f]pysiw)awn.<++>:<++>/<Esc>f)a<++><Esc>F[
 	autocmd Filetype markdown,rmd imap ,lwr_ <Esc>byiwysiw]f]pysiw)awn.<++>:<++>/<Esc>f)a<++><Esc>F[<leader>r_
-	autocmd Filetype markdown,rmd nmap ,lwr_ <yiwysiw]f]pysiw)awn.<++>:<++>/<Esc>f)a<++><Esc>F[<leader>r_
+	" autocmd Filetype markdown,rmd nmap ,lwr_ <yiwysiw]f]pysiw)awn.<++>:<++>/<Esc>f)a<++><Esc>F[<leader>r_
+	autocmd Filetype markdown,rmd imap ,T_ 0<C-r>%<Space><Esc>dF.T/d0ysiW]<leader>R_ds]=o<Esc>
+	autocmd Filetype markdown,rmd imap ,Tn 0<C-r>%<Space><Esc>dF.T/d0ysiW]gti[ds]=o<Esc>
+
 	" autocmd Filetype markdown,rmd inoremap ,cwl
 	" autocmd Filetype markdown,rmd inoremap ,crl
 	autocmd Filetype markdown,rmd inoremap ,n ---<Enter><Enter>
@@ -347,7 +362,7 @@
 	autocmd Filetype markdown,rmd inoremap ,1 #<Space><Enter><++><Esc>kA
 	autocmd Filetype markdown,rmd inoremap ,2 ##<Space><Enter><++><Esc>kA
 	autocmd Filetype markdown,rmd inoremap ,3 ###<Space><Enter><++><Esc>kA
-	" autocmd Filetype markdown,rmd inoremap ,l --------<Enter>
+	autocmd Filetype markdown,rmd inoremap ,li --------<Enter>
 	autocmd Filetype markdown map <F5> :!pandoc<space><C-r>%<space>-o<space><C-r>%.pdf<Enter><Enter>
 	autocmd Filetype rmd map <F5> :!echo<space>"require(rmarkdown),<space>render('<c-r>%')"<space>\|<space>R<space>--vanilla<enter>
 	autocmd Filetype rmd inoremap ,r ```{r}<CR>```<CR><CR><esc>2kO
