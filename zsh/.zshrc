@@ -120,7 +120,7 @@ alias bupskel='cp -Rf /etc/skel ~/.skel-backup-$(date +%Y.%m.%d-%H.%M.%S)'
 
 #copy bashrc-latest over on bashrc - cb= copy bashrc
 #alias cb='sudo cp /etc/skel/.bashrc ~/.bashrc && source ~/.bashrc'
-#copy /etc/skel/.zshrc over on ~/.zshrc - cb= copy zshrc
+#copy /etc/skel/.zshrc ver on ~/.zshrc - cb= copy zshrc
 alias cz='sudo cp /etc/skel/.zshrc ~/.zshrc && exec zsh'
 
 #switch between bash and zsh
@@ -250,5 +250,4 @@ ex ()
 setxkbmap -option caps:escape
 
 neofetch
-
 

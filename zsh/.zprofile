@@ -7,3 +7,5 @@ export EDITOR=vim
 export READER=zathura
 
 
+
+

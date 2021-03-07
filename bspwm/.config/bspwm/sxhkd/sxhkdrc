@@ -173,13 +173,13 @@ ctrl + alt + f
 ctrl + alt + i
      nitrogen
 
-#arcolinux-logout
+# arcolinux-logout
 ctrl + alt + k
      arcolinux-logout
 
-#arcolinux-logout
+# arcolinux-logout
 ctrl + alt + l
-    arcolinux-logout
+     arcolinux-logout
 
 #Pamac-manager
 ctrl + alt + p
@@ -440,15 +440,10 @@ super + BackSpace
 #################################################################
 
 # Move floating window
-super + alt + {_,shift + }{Left,Down,Up,Right}
-	~/.config/bspwm/scripts/move-window {_,edge-}{west,south,north,east}
+# super + alt + {_,shift + }{Left,Down,Up,Right}
+# 	~/.config/bspwm/scripts/move-window {_,edge-}{west,south,north,east}
 
 # RESIZE WINDOWS
-super + alt + {h,j,k,l}
-    bspc window -e {left -10,down +10,up -10,right +10}
-
-super + alt + shift + {h,j,k,l}
-    bspc window -e {right -10,up +10,down -10,left +10}
 
 #################################################################
 # SUPER + CONTROL KEYS
@@ -568,6 +563,12 @@ ctrl +alt + Up
 ctrl + alt + Down
 	bspc node --focus south
 
+# # RESIZE WINDOWS
+# ctrl + alt + {h,j,k,l}
+#     bspc window -e {left -10,down +10,up -10,right +10}
+
+# ctrl + alt + shift + {h,j,k,l}
+#     bspc window -e {right -10,up +10,down -10,left +10}
 #################################################################
 #################################################################
 ##################   AZERTY/QWERTY/ ... KEYBOARD#################
