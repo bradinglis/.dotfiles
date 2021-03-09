@@ -24,11 +24,11 @@ zstyle ':completion:*' matcher-list '' 'm:{a-zA-Z}={A-Za-z}'
 autoload -Uz compinit && compinit
 alias b="brew"
 alias r="ranger"
-alias v="vim"
-alias sv="sudo vim"
+alias v="nvim"
+alias sv="sudo nvim"
 alias g="git"
 alias mkd="mkdir -pv"
-alias vrc="vim ~/.vimrc"
+alias vrc="nvim ~/.config/nvim/init.vim"
 
 # source /usr/share/zsh/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
 
@@ -49,8 +49,8 @@ fi
 
 #list
 alias ls='ls --color=auto'
-alias la='ls -a'
-alias ll='ls -la'
+alias la='ls -A'
+alias ll='ls -lA'
 alias l='ls'
 alias l.="ls -A | egrep '^\.'"
 
@@ -220,6 +220,8 @@ alias probe="sudo -E hw-probe -all -upload"
 alias ssn="sudo shutdown now"
 alias sr="sudo reboot"
 
+alias matlabserver="~/.vim/plugged/vim-matlab/scripts/vim-matlab-server.py"
+
 # # ex = EXtractor for all kinds of archives
 # # usage: ex <file>
 ex ()
@@ -247,7 +249,10 @@ ex ()
   fi
 }
 
+export _JAVA_AWT_WM_NONREPARENTING=1
+
 setxkbmap -option caps:escape
 
-neofetch
+
+bunnyfetch
 

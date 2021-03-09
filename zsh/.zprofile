@@ -3,7 +3,7 @@
 PATH="/Library/Frameworks/Python.framework/Versions/3.9/bin:${PATH}"
 PATH=~/.bin:$PATH
 export PATH
-export EDITOR=vim
+export EDITOR=nvim
 export READER=zathura
 
 
