@@ -23,35 +23,99 @@
     function! DoRemote(arg)
       UpdateRemotePlugins
     endfunction
-    Plug 'daeyun/vim-matlab', { 'do': function('DoRemote') }
+    Plug 'daeyun/vim-matlab', { 'do': function('DoRemote'), 'for': 'matlab' }
+    Plug 'tikhomirov/vim-glsl'
     Plug 'ledger/vim-ledger'
-    Plug 'terryma/vim-multiple-cursors'
-    Plug 'jiangmiao/auto-pairs'
-    Plug 'ackyshake/VimCompletesMe'
-    Plug 'sts10/vim-pink-moon'  
-    Plug 'morhetz/gruvbox'  
-    Plug 'dense-analysis/ale'
+    Plug 'stevearc/vim-arduino'    
     Plug 'junegunn/goyo.vim'
     Plug 'junegunn/limelight.vim'
     Plug 'tpope/vim-fugitive'
+    Plug 'noahfrederick/vim-noctu'
+    Plug 'jeffkreeftmeijer/vim-dim'
     Plug 'tpope/vim-commentary'
     Plug 'tpope/vim-surround'
     Plug 'tpope/vim-repeat'
-    Plug 'kien/ctrlp.vim'
-    Plug 'xuhdev/vim-latex-live-preview', { 'for': 'tex' }
+    Plug 'lervag/vimtex'
+    Plug 'kien/ctrlp.vim' 
+    Plug 'donRaphaco/neotex', { 'for': 'tex' }
     Plug 'vimwiki/vimwiki'
     Plug 'christoomey/vim-titlecase'
     Plug 'ap/vim-css-color'
     Plug 'glts/vim-radical'
     Plug 'glts/vim-magnum'
+    Plug 'ziglang/zig.vim'
+    Plug 'neoclide/coc.nvim', {'branch': 'release'}
+    Plug 'mcchrish/nnn.vim'
+    " Plug 'iamcco/markdown-preview.nvim', { 'do': 'cd app && yarn install'  }
+    Plug 'yaocccc/markdown-preview.nvim', { 'do': 'cd app && yarn install'  }
+    Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}  
+    Plug 'nvim-lua/plenary.nvim'
+    Plug 'chrisbra/unicode.vim'
+    Plug 'nvim-telescope/telescope.nvim'
+    Plug 'conornewton/vim-pandoc-markdown-preview'
+    Plug 'skywind3000/asyncrun.vim'
     call plug#end()
 
+    let g:md_pdf_viewer="zathura"
+    let g:md_args="-f markdown -V geometry:margin=1in -V fontsize:12pt"
+    let g:mkdp_auto_start = 0
+    let g:mkdp_auto_close = 1
+    let g:mkdp_port = '8000'
+    let g:mkdp_markdown_css = expand('~/css/modest.css')
+    let g:mkdp_preview_options = {
+    \ 'mkit': {},
+    \ 'katex': {},
+    \ 'uml': {},
+    \ 'maid': {},
+    \ 'disable_sync_scroll': 0,
+    \ 'sync_scroll_type': 'middle',
+    \ 'hide_yaml_meta': 1,
+    \ 'sequence_diagrams': {},
+    \ 'flowchart_diagrams': {},
+    \ 'content_editable': v:false,
+    \ 'disable_filename': 1,
+    \ 'theme': 'dark'
+    \ }
+
+lua <<EOF
+require'nvim-treesitter.configs'.setup {
+  highlight = {
+    enable = true,
+    custom_captures = {
+      -- Highlight the @foo.bar capture group with the "Identifier" highlight group.
+      ["foo.bar"] = "Identifier",
+    },
+    -- Setting this to true will run `:h syntax` and tree-sitter at the same time.
+    -- Set this to `true` if you depend on 'syntax' being enabled (like for indentation).
+    -- Using this option may slow down your editor, and you may see some duplicate highlights.
+    -- Instead of true it can also be a list of languages
+    additional_vim_regex_highlighting = false,
+  },
+  incremental_selection = {
+    enable = true,
+    keymaps = {
+      init_selection = "gnn",
+      node_incremental = "grn",
+      scope_incremental = "grc",
+      node_decremental = "grm",
+    },
+  },
+  indent = {
+    enable = true 
+  },
+}
+EOF
+    set foldminlines=10
+    set foldnestmax=5
+
+    set foldmethod=expr
+    set foldexpr=nvim_treesitter#foldexpr()
     let g:ctrlp_user_command = ['.git/', 'git --git-dir=%s/.git ls-files -os --exclude standard']
     let g:netrw_browse_split = 2
     let g:netrw_banner = 0
-    let b:vcm_tab_complete = 'omni'
     let g:vimwiki_hl_headers = 1
-    let g:livepreview_previewer = 'open -a Preview '
+    let g:python3_host_prog = '/usr/bin/python3'
+    let g:python_host_prog='/usr/bin/python2'
 
 "______           _          
 "| ___ \         (_)         
@@ -70,6 +134,7 @@
     set number
     set guicursor=
     set nohlsearch
+    set inccommand=nosplit
     set noerrorbells
     set hidden
     set tabstop=8 softtabstop=4
@@ -80,17 +145,20 @@
     set nowrap
     set noswapfile
     set nobackup
-    set undodir=~/.vim/undodir
-    set undofile
+    " set undodir=~/.vim/undodir
+    " set undofile
     set incsearch
     set ttimeoutlen=100
     set timeoutlen=1000
     set splitbelow splitright
-    colorscheme gruvbox
+    colorscheme dim
     set background=dark
-    hi Normal guibg=NONE ctermbg=NONE
-    highlight LineNr guibg=NONE
+    " hi Normal guibg=NONE ctermbg=NONE
+    " highlight LineNr guibg=NONE
     autocmd FileType matlab setlocal commentstring=\%\ %s
+    inoremap <expr> <Tab> pumvisible() ? "\<C-n>" : "\<Tab>"
+    inoremap <expr> <S-Tab> pumvisible() ? "\<C-p>" : "\<S-Tab>"
+
 " _____           _                 
 "/  ___|         | |                
 "\ `--. _   _ ___| |_ ___ _ __ ___  
@@ -124,8 +192,8 @@
 "\  /\  / |   <| \__ \
 " \/  \/|_|_|\_\_|___/
     
-    autocmd FileType markdown,rmd set wrap
-    autocmd FileType markdown,rmd set linebreak
+    autocmd FileType markdown,rmd,tex set wrap
+    autocmd FileType markdown,rmd,tex set linebreak
 
     let master = {}
     let master.name = 'master'
@@ -181,8 +249,8 @@
     nnoremap <leader>ps :Rg<SPACE>
     nnoremap <silent> <leader>+ :vertical resize +5<CR>
     nnoremap <silent> <leader>- :vertical resize -5<CR>
-    nnoremap <leader>b :vsp ~/bibliography/bibliography.bib<CR>
-   
+    nnoremap <silent> <leader>m :make<CR>
+
     let g:limelight_conceal_ctermfg = 'DarkGray'  
     autocmd! User GoyoEnter Limelight
     autocmd! User GoyoLeave Limelight!
@@ -248,6 +316,7 @@
 	autocmd FileType tex inoremap ,nu $\varnothing$
 	autocmd FileType tex inoremap ,col \begin{columns}[T]<Enter>\begin{column}{.5\textwidth}<Enter><Enter>\end{column}<Enter>\begin{column}{.5\textwidth}<Enter><++><Enter>\end{column}<Enter>\end{columns}<Esc>5kA
 	autocmd FileType tex inoremap ,rn (\ref{})<++><Esc>F}i
+	autocmd FileType tex inoremap ,q ``''<++><Esc>T`i
 
 """LATEX Logical symbols
 	autocmd FileType tex inoremap ,m $$<Space><++><Esc>2T$i
